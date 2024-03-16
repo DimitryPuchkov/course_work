@@ -5,6 +5,8 @@ import onnxruntime as ort
 from pathlib import Path
 from scipy.optimize import linear_sum_assignment
 
+from config import NMS_THRESH
+
 INP_SIZE = (640, 640)
 
 
@@ -64,7 +66,7 @@ def postprocess(raw_out, scale_x: float = 1.0, scale_y: float = 1.0):
             y2 = int(y + h / 2) * scale_y
             correct.append([x1, y1, x2, y2, score])
     correct = np.array(correct)
-    final_boxes = nms(correct)
+    final_boxes = nms(correct, NMS_THRESH)
     return final_boxes
 
 
