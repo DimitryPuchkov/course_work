@@ -32,9 +32,13 @@ def nms(boxes, thr=0.5):
     return np.array(final_boxes)
 
 
-def init_onnx(model_path):
-    ep_list = ['CUDAExecutionProvider']
+def init_onnx(model_path, gpu=True):
+    if gpu:
+        ep_list = ['CUDAExecutionProvider']
+    else:
+        ep_list = []
     sess_options = ort.SessionOptions()
+    sess_options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
     sess = ort.InferenceSession(model_path, sess_options=sess_options, providers=ep_list)
     return sess
 
