@@ -52,19 +52,19 @@ def run_tracker(model, sort, images, n=30):
 
 
 def main():
-    yolo = init_onnx("./weights/mot17-01-frcnn.onnx", gpu=False)
+    yolo = init_onnx("./weights/mot17-01-frcnn.onnx", gpu=True)
     mot_tracker = Sort(max_age=15, min_hits=1, iou_threshold=0.3)  # create instance of the SORT tracker
 
     images_dir = Path('./speed_test/images/')
     images_paths = sorted(next(os.walk(images_dir))[2])
     img_path = './speed_test/images/000001.jpg'
     img = cv2.imread(str(img_path))
-    images = [cv2.imread(str(images_dir / pth)) for pth in images_paths]
+    # images = [cv2.imread(str(images_dir / pth)) for pth in images_paths]
 
     inp = preprocess(img)
-    # res = run_model(yolo, inp, n=30)
-    # res = run_detection(yolo, img, n=30)
-    res = run_tracker(yolo, mot_tracker, images, n=15)
+    res = run_model(yolo, inp, n=1)
+    # res = run_detection(yolo, img, n=60)
+    # res = run_tracker(yolo, mot_tracker, images, n=15)
 
 
     print('%s took %0.3fs.' % (res[2], res[0]))
