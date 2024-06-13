@@ -2,8 +2,7 @@ import os
 import cv2
 import numpy as np
 from pathlib import Path
-import argparse
-from tqdm import tqdm
+
 import time
 
 from sort import Sort
@@ -25,6 +24,15 @@ def run_model(model, inp, n=1):
     for _ in range(n):
         run(model, inp)
 
+
+@timing_val
+def run_preprocess(image):
+    preprocess(image)
+
+
+@timing_val
+def run_postprocess(out, scale_x, scale_y):
+    postprocess(out, scale_x, scale_y)
 
 @timing_val
 def run_detection(model, img, n=1):
@@ -52,8 +60,8 @@ def run_tracker(model, sort, images, n=30):
 
 
 def main():
-    yolo = init_onnx("./weights/mot17-01-frcnn.onnx", gpu=True)
-    mot_tracker = Sort(max_age=15, min_hits=1, iou_threshold=0.3)  # create instance of the SORT tracker
+    yolo = init_onnx("./weights/mot17-01-frcnn.onnx", gpu=False)
+    mot_tracker = Sort(max_age=15, min_hits=1, iou_thresh=0.3)  # create instance of the SORT tracker
 
     images_dir = Path('./speed_test/images/')
     images_paths = sorted(next(os.walk(images_dir))[2])
@@ -61,13 +69,21 @@ def main():
     img = cv2.imread(str(img_path))
     # images = [cv2.imread(str(images_dir / pth)) for pth in images_paths]
 
+    orig_h, orig_w, _ = img.shape
+    scale_x = orig_w / INP_SIZE[0]
+    scale_y = orig_h / INP_SIZE[1]
+
+    # res = run_preprocess(img)
     inp = preprocess(img)
+    # out = run(yolo, inp)
+    # res = run_postprocess(out, scale_x, scale_y)
+
     res = run_model(yolo, inp, n=1)
-    # res = run_detection(yolo, img, n=60)
+    # res = run_detection(yolo, img, n=1)
     # res = run_tracker(yolo, mot_tracker, images, n=15)
 
 
-    print('%s took %0.3fs.' % (res[2], res[0]))
+    print('%s took %0.3fms.' % (res[2], res[0]*1000))
 
 
 if __name__ == '__main__':

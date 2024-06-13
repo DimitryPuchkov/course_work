@@ -19,7 +19,7 @@ def process_video(model, sequence_name: str, results_folder: Path):
     sequence_folder = MOT_FOLDER/sequence_name/'img1'
     frames = sorted(next(os.walk(sequence_folder))[2])
     result_file = results_folder/f'{sequence_name}.txt'
-    mot_tracker = Sort(max_age=15, min_hits=1, iou_threshold=0.3)  # create instance of the SORT tracker
+    mot_tracker = Sort(max_age=15, iou_thresh=0.3)  # create instance of the SORT tracker
 
     with open(result_file, 'w') as f:
         for i, frame in enumerate(tqdm(frames, total=len(frames), desc=str(sequence_name))):
@@ -33,8 +33,8 @@ def process_video(model, sequence_name: str, results_folder: Path):
                 bb_height = tracker[3] - tracker[1]
                 f.write(f'{i+1} {obj_id} {bb_left} {bb_top} {bb_width} {bb_height} 1 -1 -1 -1\n')
 
+
 def main():
-    count = 0
     yolo = init_onnx("./weights/mot17-01-frcnn.onnx")
 
     args = parser.parse_args()
@@ -44,25 +44,6 @@ def main():
     sequences = next(os.walk(MOT_FOLDER))[1]
     for sequence_name in sequences:
         process_video(yolo, sequence_name, results_folder)
-
-
-
-
-
-    # while True:
-    #     ret, frame = cap.read()
-    #     frame = cv2.resize(frame, (640, 640))
-    #     dets = process_image(yolo, frame)
-    #
-    #     current_trackers = np.copy(mot_tracker.update(dets))
-    #
-    #     cv2.imshow("video feed", frame)
-    #
-    #     prev_trackers = np.copy(current_trackers)
-    #
-    #     if cv2.waitKey(1) & 0xFF == ord("q"):
-    #         break
-
 
 
 if __name__ == "__main__":
