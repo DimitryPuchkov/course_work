@@ -79,7 +79,7 @@ class KalmanBoxTrackerDS(KalmanBoxTracker):
         return np.array([x, y, s, h]).reshape((4, 1))
 
     def _convert_x_to_bbox(self, x, score=None):
-        w = x[2]/x[3]
+        w = x[2] / x[3]
         h = x[3]
         if score is None:
             return np.array([x[0] - w / 2.0, x[1] - h / 2.0, x[0] + w / 2.0, x[1] + h / 2.0]).reshape((1, 4))

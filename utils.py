@@ -5,9 +5,7 @@ import onnxruntime as ort
 from pathlib import Path
 from scipy.optimize import linear_sum_assignment
 
-from config import NMS_THRESH
-
-INP_SIZE = (640, 640)
+from config import INP_SIZE, NMS_THRESH
 
 
 def iou(box1, box2):
@@ -77,8 +75,8 @@ def postprocess(raw_out, scale_x: float = 1.0, scale_y: float = 1.0):
 def process_image(model, img_path: Path):
     img = cv2.imread(str(img_path))
     orig_h, orig_w, _ = img.shape
-    scale_x = orig_w/INP_SIZE[0]
-    scale_y = orig_h/INP_SIZE[1]
+    scale_x = orig_w / INP_SIZE[0]
+    scale_y = orig_h / INP_SIZE[1]
     inp = preprocess(img)
     out = run(model, inp)
     boxes = postprocess(out, scale_x, scale_y)

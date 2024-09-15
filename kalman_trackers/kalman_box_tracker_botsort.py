@@ -1,4 +1,3 @@
-from filterpy.kalman import KalmanFilter
 import numpy as np
 
 from kalman_trackers.kalman_box_tracker_ds import KalmanBoxTrackerDS

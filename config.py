@@ -6,3 +6,4 @@ from kalman_trackers.kalman_box_tracker_ds import KalmanBoxTrackerDS
 KALMAN_BOX_TRACKER = KalmanBoxTracker
 
 NMS_THRESH = 0.5
+INP_SIZE = (640, 640)

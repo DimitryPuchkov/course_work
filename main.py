@@ -1,6 +1,5 @@
 import os
 
-import cv2
 import numpy as np
 from pathlib import Path
 import argparse
@@ -16,14 +15,14 @@ parser.add_argument('-n', '--name', type=str, required=True, help='experiment na
 
 
 def process_video(model, sequence_name: str, results_folder: Path):
-    sequence_folder = MOT_FOLDER/sequence_name/'img1'
+    sequence_folder = MOT_FOLDER / sequence_name / 'img1'
     frames = sorted(next(os.walk(sequence_folder))[2])
-    result_file = results_folder/f'{sequence_name}.txt'
+    result_file = results_folder / f'{sequence_name}.txt'
     mot_tracker = Sort(max_age=15, iou_thresh=0.3)  # create instance of the SORT tracker
 
     with open(result_file, 'w') as f:
         for i, frame in enumerate(tqdm(frames, total=len(frames), desc=str(sequence_name))):
-            detections = process_image(model, sequence_folder/frame)
+            detections = process_image(model, sequence_folder / frame)
             trackers = np.copy(mot_tracker.update(detections))
             for tracker in trackers:
                 obj_id = int(tracker[-1])

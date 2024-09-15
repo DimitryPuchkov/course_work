@@ -6,7 +6,8 @@ from pathlib import Path
 import time
 
 from sort import Sort
-from utils import init_onnx, process_image, run, preprocess, INP_SIZE, postprocess
+from config import INP_SIZE
+from utils import init_onnx, process_image, run, preprocess, postprocess
 
 
 def timing_val(func):
@@ -33,6 +34,7 @@ def run_preprocess(image):
 @timing_val
 def run_postprocess(out, scale_x, scale_y):
     postprocess(out, scale_x, scale_y)
+
 
 @timing_val
 def run_detection(model, img, n=1):
@@ -81,8 +83,7 @@ def main():
     res = run_model(yolo, inp, n=1)
     # res = run_detection(yolo, img, n=1)
     # res = run_tracker(yolo, mot_tracker, images, n=15)
-
-
+    
     print('%s took %0.3fms.' % (res[2], res[0]*1000))
 
 
