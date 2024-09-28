@@ -240,7 +240,7 @@ class Sort(object):
 
 def init_onnx(model_path: str) -> ort.InferenceSession:
     EP_list = ["CUDAExecutionProvider"]
-    sess = ort.InferenceSession("./runs/detect/train2/weights/best.onnx", providers=EP_list)
+    sess = ort.InferenceSession(model_path, providers=EP_list)
     return sess
 
 
@@ -315,7 +315,7 @@ def intersect_1(a: int, b: int, c: int, d: int):
 
 def main():
     count = 0
-    yolo = init_onnx("./runs/detect/train2/weights/best.onnx")
+    yolo = init_onnx("./best.onnx")
     cap = cv2.VideoCapture("/storage/data/2023-04-29-05-05-16.mp4")  # video file
     mot_tracker = Sort(max_age=15, iou_threshold=0.3)
     prev_trackers = []  # trackers on current-1 frame
