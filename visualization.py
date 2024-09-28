@@ -344,7 +344,7 @@ def main():
 
         prev_trackers = np.copy(current_trackers)  # update prev_trackers
 
-        if cv2.waitKey(1) & 0xFF == ord("q"):  # press q to quit
+        if cv2.waitKey(1) & 0xFF == ord("q"):
             break
     cap.release()
     cv2.destroyAllWindows()
